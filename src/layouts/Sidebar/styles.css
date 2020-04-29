@@ -1,4 +1,23 @@
 .sidebar {
   background: var(--primary);
+  color: var(--white);
   flex: 0 0 300px;
+  overflow: auto;
+}
+
+.sidebar-header {
+  align-items: center;
+  display: flex;
+  font-size: 1.5rem !important;
+  height: var(--header-height);
+  justify-content: center;
+  margin-bottom: 2rem !important;
+}
+
+.nested {
+  padding-left: 2rem !important;
+}
+
+.MuiListItem-button:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
