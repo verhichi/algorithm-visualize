@@ -1,0 +1,4 @@
+.sidebar {
+  background: var(--primary);
+  flex: 0 0 300px;
+}
