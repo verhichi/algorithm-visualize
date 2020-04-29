@@ -1,4 +1,5 @@
 .body {
+  background: var(--gray-200);
   flex: 1 0;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
 }
