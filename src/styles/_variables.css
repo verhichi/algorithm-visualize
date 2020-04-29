@@ -1,4 +1,7 @@
 :root {
+  --header-height: 4rem;
   --primary: #282c34;
   --font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  --white: #fff;
+  --black: #000;
 }
