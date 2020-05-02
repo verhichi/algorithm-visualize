@@ -1,16 +1,7 @@
-import Home from 'pages/Home'
-import Sort from 'pages/Sort'
+import { homeRoute } from 'pages/Home'
+import { bubbleSortRoute } from 'pages/Sort/BubbleSort'
 import { RouteType } from '.'
 
-const routes: RouteType[] = [
-  {
-    path: '/',
-    component: Home,
-  },
-  {
-    path: '/sort',
-    component: Sort,
-  },
-]
+const routes: RouteType[] = [homeRoute, bubbleSortRoute]
 
 export default routes
