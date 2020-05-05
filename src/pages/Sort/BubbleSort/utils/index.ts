@@ -1,3 +1,5 @@
+import { SortItemType } from '..'
+
 export const bubbleSort = (array: number[]) => {
   const returnArray = [...array]
   const n = array.length
@@ -12,3 +14,5 @@ export const bubbleSort = (array: number[]) => {
   }
   return returnArray
 }
+
+export const makeSortItemArray = (array: number[]): SortItemType[] => array.map((number, idx) => ({ id: idx, number }))
