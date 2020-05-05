@@ -1,11 +1,12 @@
-import React, { useContext, useState, useRef } from 'react'
+import React, { useContext, useState, useRef, ChangeEvent } from 'react'
 import { Stage, Layer, Rect, Group } from 'react-konva'
 import Konva from 'konva'
-import Text from 'components/atoms/Text'
-import Button from 'components/molecules/Button'
 import { Rect as RectType } from 'konva/types/shapes/Rect'
 import { Group as GroupType } from 'konva/types/Group'
-import { initNumberArray, makeSortItemArray } from '.'
+import Text from 'components/atoms/Text'
+import Button from 'components/molecules/Button'
+import Input from 'components/molecules/Input'
+import { initArrayString, parseStringToNumberArray, makeSortItemArray } from '.'
 import { BodyWidthContext } from 'layouts/Body'
 import './styles.css'
 
@@ -13,11 +14,14 @@ const BubbleSort = () => {
   const canvasContainer = useRef<HTMLDivElement>(null)
   const canvasContainerHeight = 500
   const bodyWidth = useContext(BodyWidthContext)
-  const [isSorting, setIsSorting] = useState(false)
   const sortItemRefs = useRef<{ [key: number]: RectType | null }>({})
   const selectedItemRef = useRef<GroupType | null>()
-  const sortItems = makeSortItemArray(initNumberArray)
-  const sortItemsMax = Math.max(...initNumberArray)
+  const [isSorting, setIsSorting] = useState(false)
+  const [numberArrayString, setNumberArrayString] = useState(initArrayString)
+  const [msDuration, setMsDuration] = useState(100)
+  const numberArray = parseStringToNumberArray(numberArrayString)
+  const sortItems = makeSortItemArray(numberArray)
+  const sortItemsMax = Math.max(...numberArray)
   const barWidth = bodyWidth / (sortItems.length * 2)
   const selectedBarIndicatorWidth = barWidth * 0.6
 
@@ -37,10 +41,13 @@ const BubbleSort = () => {
     )
   })
 
+  const handleChangeNumberArrayString = (e: ChangeEvent<HTMLInputElement>) => setNumberArrayString(e.target.value)
+  const handleChangeDuration = (e: ChangeEvent<HTMLInputElement>) => setMsDuration(parseInt(e.target.value))
+
   const handleClick = () => {
     if (isSorting) return
     setIsSorting(true)
-    const duration = 0.1
+    const duration = msDuration / 1000
     const array = [...sortItems]
     const n = array.length
     let count = 0
@@ -118,7 +125,7 @@ const BubbleSort = () => {
 
   return (
     <>
-      <Text className="mb-4" variant="h4">
+      <Text className="mt-1 mb-4" variant="h4">
         Bubble Sort
       </Text>
 
@@ -140,16 +147,35 @@ const BubbleSort = () => {
           The time complexity of Bubble Sort is O(n2). The main advantage of Bubble Sort is the simplicity of the
           algorithm.
           <br />
-          <br />
-          The space complexity for Bubble Sort is O(1), because only a single additional memory space is required
+          The space complexity for Bubble Sort is O(1), because only a single additional memory space is required.
         </Text>
       </section>
 
       <section>
         <Text variant="h6">Visualization</Text>
-        <Button className="mb-4" variant="contained" color="primary" onClick={handleClick} disabled={isSorting}>
-          See Bubble Sort in action
-        </Button>
+        <Input
+          className="mb-2"
+          label="Comma separated list of numbers"
+          value={numberArrayString}
+          onChange={handleChangeNumberArrayString}
+          variant="filled"
+          fullWidth
+          disabled={isSorting}
+        />
+        <Input
+          className="mb-2"
+          label="Time per Step(ms)"
+          type="number"
+          value={msDuration}
+          onChange={handleChangeDuration}
+          variant="filled"
+          disabled={isSorting}
+        />
+        <div>
+          <Button className="mb-4" variant="contained" color="primary" onClick={handleClick} disabled={isSorting}>
+            See Bubble Sort in action
+          </Button>
+        </div>
         <div ref={canvasContainer} className="canvas-container">
           <Stage width={bodyWidth} height={canvasContainerHeight}>
             <Layer>
