@@ -1,29 +1,33 @@
-import React, { useState, useRef } from 'react'
+import React, { useContext, useState, useRef } from 'react'
 import { Stage, Layer, Rect, Group } from 'react-konva'
 import Konva from 'konva'
 import Text from 'components/atoms/Text'
 import { initNumberArray, makeSortItemArray } from '.'
 import { Rect as RectType } from 'konva/types/shapes/Rect'
 import { Group as GroupType } from 'konva/types/Group'
+import { BodyWidthContext } from 'layouts/Body'
 import './styles.css'
 
 const BubbleSort = () => {
+  const width = useContext(BodyWidthContext)
   const [isSorting, setIsSorting] = useState(false)
   const sortItemRefs = useRef<{ [key: number]: RectType | null }>({})
   const selectedItemRef = useRef<GroupType | null>()
   const sortItems = makeSortItemArray(initNumberArray)
 
-  const rectangles = sortItems.map(({ id, number }, idx) => (
-    <Rect
-      key={id}
-      x={idx * 100}
-      y={50}
-      ref={el => (sortItemRefs.current[id] = el)}
-      width={50}
-      height={number}
-      fill="#aaa"
-    />
-  ))
+  const rectangles = sortItems.map(({ id, number }, idx) => {
+    return (
+      <Rect
+        key={id}
+        x={idx * 100}
+        y={50}
+        ref={el => (sortItemRefs.current[id] = el)}
+        width={50}
+        height={number}
+        fill="#aaa"
+      />
+    )
+  })
 
   const handleClick = () => {
     setIsSorting(true)
@@ -108,7 +112,7 @@ const BubbleSort = () => {
       <Text variant="h4">Bubble Sort</Text>
       <button onClick={handleClick}>SORT</button>
       <div className="canvas-container">
-        <Stage width={window.innerWidth} height={window.innerHeight}>
+        <Stage width={width} height={window.innerHeight}>
           <Layer>
             <Group ref={el => (selectedItemRef.current = el)}>
               {isSorting && (
