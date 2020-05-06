@@ -1,127 +1,22 @@
-import React, { useContext, useState, useRef, ChangeEvent } from 'react'
-import { Stage, Layer, Rect, Group } from 'react-konva'
-import Konva from 'konva'
-import { Rect as RectType } from 'konva/types/shapes/Rect'
-import { Group as GroupType } from 'konva/types/Group'
+import React, { useState, ChangeEvent } from 'react'
 import Text from 'components/atoms/Text'
 import Button from 'components/molecules/Button'
 import Input from 'components/molecules/Input'
-import { initArrayString, parseStringToNumberArray, makeSortItemArray } from '.'
-import { BodyWidthContext } from 'layouts/Body'
+import BubbleSortCanvas from './components/organisms/BubbleSortCanvas'
+import { initArrayString, parseStringToNumberArray } from '.'
 import './styles.css'
 
 const BubbleSort = () => {
-  const canvasContainer = useRef<HTMLDivElement>(null)
-  const canvasContainerHeight = 500
-  const bodyWidth = useContext(BodyWidthContext)
-  const sortItemRefs = useRef<{ [key: number]: RectType | null }>({})
-  const selectedItemRef = useRef<GroupType | null>()
   const [isSorting, setIsSorting] = useState(false)
   const [numberArrayString, setNumberArrayString] = useState(initArrayString)
-  const [msDuration, setMsDuration] = useState(100)
-  const numberArray = parseStringToNumberArray(numberArrayString)
-  const sortItems = makeSortItemArray(numberArray)
-  const sortItemsMax = Math.max(...numberArray)
-  const barWidth = bodyWidth / (sortItems.length * 2)
-  const selectedBarIndicatorWidth = barWidth * 0.6
-
-  const rectangles = sortItems.map(({ id, number }, idx) => {
-    const x = barWidth * idx * 2
-    const height = canvasContainerHeight * (number / sortItemsMax)
-    return (
-      <Rect
-        key={id}
-        x={x}
-        y={50}
-        ref={el => (sortItemRefs.current[id] = el)}
-        width={barWidth}
-        height={height}
-        fill="#aaa"
-      />
-    )
-  })
+  const [duration, setDuration] = useState(100)
+  const numbers = parseStringToNumberArray(numberArrayString)
 
   const handleChangeNumberArrayString = (e: ChangeEvent<HTMLInputElement>) => setNumberArrayString(e.target.value)
-  const handleChangeDuration = (e: ChangeEvent<HTMLInputElement>) => setMsDuration(parseInt(e.target.value))
+  const handleChangeDuration = (e: ChangeEvent<HTMLInputElement>) => setDuration(parseInt(e.target.value))
 
-  const handleClick = () => {
-    if (isSorting) return
-    setIsSorting(true)
-    const duration = msDuration / 1000
-    const array = [...sortItems]
-    const n = array.length
-    let count = 0
-    for (let ii = 0; ii < n - 1; ii++) {
-      const isLastLap = ii === n - 2
-
-      for (let jj = 0; jj < n - ii - 1; jj++) {
-        count++
-        const isLastSwapOfLap = jj + 1 === n - ii - 1
-        const willSwap = array[jj].number > array[jj + 1].number
-        const id1 = array[jj].id
-        const id2 = array[jj + 1].id
-
-        // step1. move selected & change selectedBarColor
-        window.setTimeout(() => {
-          new Konva.Tween({
-            node: selectedItemRef.current,
-            x: jj * barWidth * 2,
-            duration,
-          }).play()
-
-          new Konva.Tween({
-            node: sortItemRefs.current[id1],
-            fill: '#f00',
-            duration,
-          }).play()
-
-          new Konva.Tween({
-            node: sortItemRefs.current[id2],
-            fill: '#f00',
-            duration,
-          }).play()
-        }, count * duration * 2000)
-
-        count++
-        // step2. swap & change selectedBarColor
-        window.setTimeout(() => {
-          new Konva.Tween({
-            node: sortItemRefs.current[id1],
-            x: willSwap ? (jj + 1) * barWidth * 2 : jj * barWidth * 2,
-            duration,
-            onFinish: () => {
-              new Konva.Tween({
-                node: sortItemRefs.current[id1],
-                fill: (isLastSwapOfLap && willSwap) || isLastLap ? '#0f0' : '#aaa',
-                duration,
-              }).play()
-            },
-          }).play()
-
-          new Konva.Tween({
-            node: sortItemRefs.current[id2],
-            x: willSwap ? jj * barWidth * 2 : (jj + 1) * barWidth * 2,
-            duration,
-            onFinish: () => {
-              new Konva.Tween({
-                node: sortItemRefs.current[id2],
-                fill: (isLastSwapOfLap && !willSwap) || isLastLap ? '#0f0' : '#aaa',
-                duration,
-              }).play()
-            },
-          }).play()
-
-          if (isLastLap) setIsSorting(false)
-        }, count * duration * 2000)
-
-        if (willSwap) {
-          const temp = array[jj]
-          array[jj] = array[jj + 1]
-          array[jj + 1] = temp
-        }
-      }
-    }
-  }
+  const handleClickSort = () => setIsSorting(true)
+  const handleSortEnd = () => setIsSorting(false)
 
   return (
     <>
@@ -166,43 +61,15 @@ const BubbleSort = () => {
           className="mb-2"
           label="Time per Step(ms)"
           type="number"
-          value={msDuration}
+          value={duration}
           onChange={handleChangeDuration}
           variant="filled"
           disabled={isSorting}
         />
-        <div>
-          <Button className="mb-4" variant="contained" color="primary" onClick={handleClick} disabled={isSorting}>
-            See Bubble Sort in action
-          </Button>
-        </div>
-        <div ref={canvasContainer} className="canvas-container">
-          <Stage width={bodyWidth} height={canvasContainerHeight}>
-            <Layer>
-              <Group ref={el => (selectedItemRef.current = el)}>
-                {isSorting && (
-                  <>
-                    <Rect
-                      x={selectedBarIndicatorWidth * 0.2}
-                      y={10}
-                      width={selectedBarIndicatorWidth}
-                      height={10}
-                      fill="#f00"
-                    />
-                    <Rect
-                      x={barWidth * 2 + selectedBarIndicatorWidth * 0.4}
-                      y={10}
-                      width={selectedBarIndicatorWidth}
-                      height={10}
-                      fill="#f00"
-                    />
-                  </>
-                )}
-              </Group>
-              {rectangles}
-            </Layer>
-          </Stage>
-        </div>
+        <Button className="mb-4" variant="contained" color="primary" onClick={handleClickSort} disabled={isSorting}>
+          See Bubble Sort in action
+        </Button>
+        <BubbleSortCanvas numbers={numbers} duration={duration} isSorting={isSorting} onSortEnd={handleSortEnd} />
       </section>
     </>
   )
