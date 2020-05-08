@@ -2,8 +2,7 @@ import React, { useState, ChangeEvent } from 'react'
 import Text from 'components/atoms/Text'
 import Button from 'components/molecules/Button'
 import Input from 'components/molecules/Input'
-import BubbleSortCanvas from './components/organisms/BubbleSortCanvas'
-import { initArrayString, parseStringToNumberArray } from '.'
+import { BubbleSortCanvas, initArrayString, parseStringToNumberArray } from '.'
 import './styles.css'
 
 const BubbleSort = () => {
@@ -66,7 +65,13 @@ const BubbleSort = () => {
           variant="filled"
           disabled={isSorting}
         />
-        <Button className="mb-4" variant="contained" color="primary" onClick={handleClickSort} disabled={isSorting}>
+        <Button
+          className="d-block mb-4"
+          variant="contained"
+          color="primary"
+          onClick={handleClickSort}
+          disabled={isSorting}
+        >
           See Bubble Sort in action
         </Button>
         <BubbleSortCanvas numbers={numbers} duration={duration} isSorting={isSorting} onSortEnd={handleSortEnd} />

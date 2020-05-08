@@ -4,8 +4,8 @@ import Konva from 'konva'
 import { Rect as RectType } from 'konva/types/shapes/Rect'
 import { Group as GroupType } from 'konva/types/Group'
 import Canvas from 'components/molecules/Canvas'
-import { makeSortItemArray } from '.'
 import { BodyWidthContext } from 'layouts/Body'
+import { makeSortItemArray } from '.'
 
 type Props = {
   numbers: number[]
@@ -14,7 +14,7 @@ type Props = {
   onSortEnd: () => void
 }
 
-const BubbleSortCanvas = ({ numbers, duration, isSorting, onSortEnd }: Props) => {
+export const BubbleSortCanvas = ({ numbers, duration, isSorting, onSortEnd }: Props) => {
   const bodyWidth = useContext(BodyWidthContext)
   const [timeoutKeys, setTimeoutKeys] = useState<number[]>([])
   const sortItemRefs = useRef<{ [key: number]: RectType | null }>({})
@@ -151,5 +151,3 @@ const BubbleSortCanvas = ({ numbers, duration, isSorting, onSortEnd }: Props) =>
     </Canvas>
   )
 }
-
-export default BubbleSortCanvas
