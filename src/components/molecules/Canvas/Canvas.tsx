@@ -2,6 +2,7 @@ import React, { useRef, useContext, ReactNode } from 'react'
 import { Stage, Layer } from 'react-konva'
 import { BodyWidthContext } from 'layouts/Body'
 import clsx from 'clsx'
+import './styles.css'
 
 type Props = {
   className?: string
