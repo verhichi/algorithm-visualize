@@ -1,4 +1,11 @@
 @import './_variables.css';
+@import './_classes.css';
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
 
 html,
 body {
