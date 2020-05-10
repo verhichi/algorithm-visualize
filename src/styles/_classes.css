@@ -1,3 +1,22 @@
+/* display */
+.d-block {
+  display: block !important;
+}
+
+.d-inline {
+  display: inline !important;
+}
+
+.d-inline-block {
+  display: inline-block !important;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+
+/* padding */
 .p-1 {
   padding: 0.25rem !important;
 }
@@ -110,6 +129,7 @@
   padding-right: 1rem !important;
 }
 
+/* margin */
 .m-1 {
   margin: 0.25rem !important;
 }
